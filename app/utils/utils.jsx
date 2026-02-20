@@ -60,6 +60,10 @@ function hexToRgb(hex) {
         : { r, g, b };
 };
 
+export function hexToRgbExport(hex) {
+    return hexToRgb(hex);
+};
+
 export function isColorInPalette(r, g, b, paletteRgb, colorMargin = 1) {
     return paletteRgb.some((palette) => (
         Math.abs(palette.r - r) <= colorMargin

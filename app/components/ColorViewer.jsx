@@ -2,11 +2,13 @@ import styles from "./styles";
 import { findClosestPaletteColor, rgbToHexNoAlpha } from "../utils/utils";
 
 export default function ColorViewer({ colors, hoveredColor, setHoveredColor, headPalette = [] }) {
+    const visibleColors = colors.filter(color => !color.hex.endsWith('00'));
+    
     return (
     <div className="color-viewer" style={styles.colorSection}>
-        <h2 style={styles.sectionTitle}>Colors ({colors.length})</h2>
+        <h2 style={styles.sectionTitle}>Colors ({visibleColors.length})</h2>
         <div className="color-list" style={styles.colorList}>
-            {colors.map((color, index) => (
+            {visibleColors.map((color, index) => (
                 <div
                     className="color-card"
                     key={index}

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { getColors, rgbToHex, isColorInPalette, rgbToHexNoAlpha, findClosestPaletteColor } from './utils/utils';
+import { getColors, rgbToHex, isColorInPalette, rgbToHexNoAlpha, findClosestPaletteColor, hexToRgbExport } from './utils/utils';
 
 import colorsByDex from './utils/colors.json';
 import pifDex from './utils/pif_dex.json';
@@ -25,6 +25,8 @@ export default function Home() {
     });
     const [headPalette, setHeadPalette] = useState([]);
     const [colorMargin, setColorMargin] = useState(5);
+    const [showApproximation, setShowApproximation] = useState(false);
+    const [highlightColor, setHighlightColor] = useState('#FFFF00');
     const canvasRef = useRef(null);
     const displayCanvasRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -117,6 +119,27 @@ export default function Home() {
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
+        // Apply palette approximation if toggled
+        if (showApproximation && headPalette.length > 0) {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+                // a = pixels[i + 3] (alpha unchanged)
+
+                const closest = findClosestPaletteColor({ r, g, b }, headPalette);
+                if (closest) {
+                    pixels[i] = closest.r;
+                    pixels[i + 1] = closest.g;
+                    pixels[i + 2] = closest.b;
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+
         if (hoveredColor) {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const pixels = imageData.data;
@@ -131,9 +154,10 @@ export default function Home() {
                 const a = pixels[i + 3];
 
                 if (r === hoveredColor.r && g === hoveredColor.g && b === hoveredColor.b && a === hoveredColor.a) {
-                    highlight[i] = 255;
-                    highlight[i + 1] = 255;
-                    highlight[i + 2] = 0;
+                    const hColor = hexToRgbExport(highlightColor);
+                    highlight[i] = hColor ? hColor.r : 255;
+                    highlight[i + 1] = hColor ? hColor.g : 255;
+                    highlight[i + 2] = hColor ? hColor.b : 0;
                     highlight[i + 3] = 255;
                 } else {
                     highlight[i] = pixels[i];
@@ -144,7 +168,7 @@ export default function Home() {
             }
             ctx.putImageData(highlightData, 0, 0);
         }
-    }, [hoveredColor, image]);
+    }, [hoveredColor, image, showApproximation, headPalette, highlightColor]);
 
     useEffect(() => {
         if (image && displayCanvasRef.current) {
@@ -180,6 +204,10 @@ export default function Home() {
                         fusionOrder={fusionOrder}
                         colorMargin={colorMargin}
                         setColorMargin={setColorMargin}
+                        showApproximation={showApproximation}
+                        setShowApproximation={setShowApproximation}
+                        highlightColor={highlightColor}
+                        setHighlightColor={setHighlightColor}
                     />
                     <ColorViewer
                         colors={colors}

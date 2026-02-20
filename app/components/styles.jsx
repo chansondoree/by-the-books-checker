@@ -224,7 +224,8 @@ const getStyles = (isDarkMode = false) => {
   },
   
   colorSection: {
-    flex: '0 0 300px'
+    flex: '1 1 200px',
+    minWidth: '200px'
   },
   
   colorList: {

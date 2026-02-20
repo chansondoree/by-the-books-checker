@@ -1,7 +1,7 @@
 import colorsByDex from './colors.json';
 import pifDex from './pif_dex.json';
 
-export function getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette) {
+export function getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette, colorMargin) {
     const pixels = imageData.data;
     const colorMap = new Map();
     const paletteRgb = headPalette
@@ -31,7 +31,7 @@ export function getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isC
                 a,
                 count,
                 hex: rgbToHex(r, g, b, a),
-                inPalette: isColorInPalette(r, g, b, paletteRgb),
+                inPalette: isColorInPalette(r, g, b, paletteRgb, colorMargin),
                 hexRgb
             };
         });
@@ -63,10 +63,10 @@ function hexToRgb(hex) {
         : { r, g, b };
 };
 
-export function isColorInPalette(r, g, b, paletteRgb) {
+export function isColorInPalette(r, g, b, paletteRgb, colorMargin = 1) {
     return paletteRgb.some((palette) => (
-        Math.abs(palette.r - r) <= 1
-        && Math.abs(palette.g - g) <= 1
-        && Math.abs(palette.b - b) <= 1
+        Math.abs(palette.r - r) <= colorMargin
+        && Math.abs(palette.g - g) <= colorMargin
+        && Math.abs(palette.b - b) <= colorMargin
     ));
 };

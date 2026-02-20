@@ -9,7 +9,28 @@ const styles = {
   title: {
     marginBottom: '20px'
   },
+
+  headerPre: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '1em',
+  },
+
+  headerPost: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   
+  footer: {
+    width: '100%',
+    textAlign: 'center',
+    fontSize: '12px',
+    color: '#666',
+    marginTop: '1em',
+  },
+
   dropZone: {
     border: '3px dashed #ccc',
     borderRadius: '10px',
@@ -163,9 +184,9 @@ const styles = {
   paletteBadgeActive: {
     fontSize: '10px',
     fontWeight: '600',
-    color: '#0a6b2c',
-    backgroundColor: '#e6f6ec',
-    border: '1px solid #bfe8cc',
+    color: '#075b88',
+    backgroundColor: '#e8f3fc',
+    border: '1px solid #bfdbe8',
     borderRadius: '999px',
     padding: '2px 6px',
     textTransform: 'uppercase',
@@ -175,9 +196,9 @@ const styles = {
   paletteBadgeInactive: {
     fontSize: '10px',
     fontWeight: '600',
-    color: '#8a2d2d',
-    backgroundColor: '#fdecec',
-    border: '1px solid #f3c2c2',
+    color: '#8b4c2d',
+    backgroundColor: '#fdf2ed',
+    border: '1px solid #f3d3c3',
     borderRadius: '999px',
     padding: '2px 6px',
     textTransform: 'uppercase',
@@ -188,6 +209,37 @@ const styles = {
     marginBottom: '8px',
     fontSize: '12px',
     color: '#444'
+  },
+
+  marginControl: {
+    marginTop: '16px',
+    padding: '12px',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '6px',
+    border: '1px solid #e0e0e0',
+    width: '288px'
+  },
+
+  marginLabel: {
+    display: 'block',
+    fontSize: '13px',
+    fontWeight: '600',
+    marginBottom: '6px',
+    color: '#333'
+  },
+
+  marginInput: {
+    width: '70px',
+    padding: '6px 8px',
+    fontSize: '14px',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    marginRight: '8px'
+  },
+
+  marginHint: {
+    fontSize: '11px',
+    color: '#666'
   }
 };
 

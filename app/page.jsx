@@ -24,6 +24,7 @@ export default function Home() {
         bodyName: ''
     });
     const [headPalette, setHeadPalette] = useState([]);
+    const [colorMargin, setColorMargin] = useState(5);
     const canvasRef = useRef(null);
     const displayCanvasRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -38,7 +39,7 @@ export default function Home() {
         ctx.drawImage(img, 0, 0);
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const sortedColors = getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette);
+        const sortedColors = getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette, colorMargin);
 
         setColors(sortedColors);
     };
@@ -102,7 +103,7 @@ export default function Home() {
         if (image && canvasRef.current) {
             extractColors(image);
         }
-    }, [image, headPalette]);
+    }, [image, headPalette, colorMargin]);
 
     useEffect(() => {
         if (!image || !displayCanvasRef.current) return;
@@ -177,6 +178,8 @@ export default function Home() {
                         displayCanvasRef={displayCanvasRef}
                         canvasRef={canvasRef}
                         fusionOrder={fusionOrder}
+                        colorMargin={colorMargin}
+                        setColorMargin={setColorMargin}
                     />
                     <ColorViewer
                         colors={colors}
@@ -185,7 +188,9 @@ export default function Home() {
                     />
                 </div>
             ) : null}
-
+            <div style={styles.footer}>
+                <i>Palettes taken from <a href="https://pokemondb.net" target="_blank">pokemondb.net</a> and the Smogon Sprite Project.</i>
+            </div>
         </div>
     );
 }

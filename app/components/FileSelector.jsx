@@ -52,7 +52,7 @@ export default function FileSelector({
 
     return (
         <div style={image ? styles.headerPost : styles.headerPre}>
-            <h1 style={{fontWeight: 'bold'}}>By the Books Color Checker</h1>
+            <h1 style={{fontWeight: 'bold'}}>By the Books Color Checker 📚</h1>
             {image ? (
                 <div className="upload-controls" style={styles.uploadControls}>
                     <button

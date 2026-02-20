@@ -3,7 +3,7 @@ import { findClosestPaletteColor, rgbToHexNoAlpha } from "../utils/utils";
 
 export default function ColorViewer({ colors, hoveredColor, setHoveredColor, headPalette = [], isDarkMode = false }) {
     const styles = getStyles(isDarkMode);
-    const visibleColors = colors.filter(color => !(color.hex.length === 6 && color.hex.endsWith('00')));
+    const visibleColors = colors.filter(color => !(color.hex.length === 9 && color.hex.endsWith('00')));
     
     return (
     <div className="color-viewer" style={styles.colorSection}>

@@ -1,6 +1,7 @@
 import styles from "./styles";
+import { findClosestPaletteColor, rgbToHexNoAlpha } from "../utils/utils";
 
-export default function ColorViewer({ colors, hoveredColor, setHoveredColor }) {
+export default function ColorViewer({ colors, hoveredColor, setHoveredColor, headPalette = [] }) {
     return (
     <div className="color-viewer" style={styles.colorSection}>
         <h2 style={styles.sectionTitle}>Colors ({colors.length})</h2>
@@ -26,9 +27,14 @@ export default function ColorViewer({ colors, hoveredColor, setHoveredColor }) {
                         <div style={styles.colorHex}>
                             {color.hex.toUpperCase()}
                         </div>
-                        <div style={styles.colorMeta}>
-                            {color.count} px
-                        </div>
+                        {!color.inPalette && headPalette.length > 0 && (() => {
+                            const closest = findClosestPaletteColor({ r: color.r, g: color.g, b: color.b }, headPalette);
+                            return closest ? (
+                                <div style={{fontSize: '12px', color: '#666'}}>
+                                    → {rgbToHexNoAlpha(closest.r, closest.g, closest.b).toUpperCase()}
+                                </div>
+                            ) : null;
+                        })()}
                     </div>
                     <div
                         style={

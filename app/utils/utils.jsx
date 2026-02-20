@@ -1,6 +1,3 @@
-import colorsByDex from './colors.json';
-import pifDex from './pif_dex.json';
-
 export function getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette, colorMargin) {
     const pixels = imageData.data;
     const colorMap = new Map();
@@ -69,4 +66,39 @@ export function isColorInPalette(r, g, b, paletteRgb, colorMargin = 1) {
         && Math.abs(palette.g - g) <= colorMargin
         && Math.abs(palette.b - b) <= colorMargin
     ));
+};
+
+export function findClosestPaletteColor(inputColor, palette) {
+    // Convert input color to RGB if it's hex
+    const inputRgb = typeof inputColor === 'string' 
+        ? hexToRgb(inputColor)
+        : inputColor;
+    
+    if (!inputRgb) return null;
+
+    // Convert palette to RGB if needed
+    const paletteRgb = palette.map(color => 
+        typeof color === 'string' ? hexToRgb(color) : color
+    ).filter(Boolean);
+
+    if (paletteRgb.length === 0) return null;
+
+    // Calculate Euclidean distance in RGB space
+    let closest = paletteRgb[0];
+    let minDistance = Infinity;
+
+    paletteRgb.forEach((paletteColor) => {
+        const distance = Math.sqrt(
+            Math.pow(inputRgb.r - paletteColor.r, 2) +
+            Math.pow(inputRgb.g - paletteColor.g, 2) +
+            Math.pow(inputRgb.b - paletteColor.b, 2)
+        );
+
+        if (distance < minDistance) {
+            minDistance = distance;
+            closest = paletteColor;
+        }
+    });
+
+    return closest;
 };

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { getColors, rgbToHex, isColorInPalette, rgbToHexNoAlpha } from './utils/utils';
+import { getColors, rgbToHex, isColorInPalette, rgbToHexNoAlpha, findClosestPaletteColor } from './utils/utils';
 
 import colorsByDex from './utils/colors.json';
 import pifDex from './utils/pif_dex.json';
@@ -185,6 +185,7 @@ export default function Home() {
                         colors={colors}
                         hoveredColor={hoveredColor}
                         setHoveredColor={setHoveredColor}
+                        headPalette={headPalette}
                     />
                 </div>
             ) : null}

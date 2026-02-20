@@ -1,8 +1,9 @@
-import styles from "./styles";
+import { getStyles } from "./styles";
 import { findClosestPaletteColor, rgbToHexNoAlpha } from "../utils/utils";
 
-export default function ColorViewer({ colors, hoveredColor, setHoveredColor, headPalette = [] }) {
-    const visibleColors = colors.filter(color => !color.hex.endsWith('00'));
+export default function ColorViewer({ colors, hoveredColor, setHoveredColor, headPalette = [], isDarkMode = false }) {
+    const styles = getStyles(isDarkMode);
+    const visibleColors = colors.filter(color => !(color.hex.length === 6 && color.hex.endsWith('00')));
     
     return (
     <div className="color-viewer" style={styles.colorSection}>
@@ -16,7 +17,7 @@ export default function ColorViewer({ colors, hoveredColor, setHoveredColor, hea
                     onMouseLeave={() => setHoveredColor(null)}
                     style={{
                         ...styles.colorItem,
-                        backgroundColor: hoveredColor === color ? '#f0f0f0' : 'white'
+                        backgroundColor: hoveredColor === color ? (isDarkMode ? '#3a3a3a' : '#f0f0f0') : styles.backgroundAlt
                     }}
                 >
                     <div
@@ -32,7 +33,7 @@ export default function ColorViewer({ colors, hoveredColor, setHoveredColor, hea
                         {!color.inPalette && headPalette.length > 0 && (() => {
                             const closest = findClosestPaletteColor({ r: color.r, g: color.g, b: color.b }, headPalette);
                             return closest ? (
-                                <div style={{fontSize: '12px', color: '#666'}}>
+                                <div style={{fontSize: '12px', color: styles.textMuted}}>
                                     → {rgbToHexNoAlpha(closest.r, closest.g, closest.b).toUpperCase()}
                                 </div>
                             ) : null;

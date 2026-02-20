@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
+import { FaSun, FaMoon } from 'react-icons/fa';
 import { getColors, rgbToHex, isColorInPalette, rgbToHexNoAlpha, findClosestPaletteColor, hexToRgbExport } from './utils/utils';
 
 import colorsByDex from './utils/colors.json';
@@ -9,10 +10,11 @@ import pifDex from './utils/pif_dex.json';
 import ColorViewer from './components/ColorViewer';
 import FileSelector from './components/FileSelector';
 import ImageCanvas from './components/ImageCanvas';
-import styles from './components/styles';
+import { getStyles } from './components/styles';
 
 
 export default function Home() {
+    const [isDarkMode, setIsDarkMode] = useState(false);
     const [image, setImage] = useState(null);
     const [colors, setColors] = useState([]);
     const [hoveredColor, setHoveredColor] = useState(null);
@@ -31,6 +33,8 @@ export default function Home() {
     const displayCanvasRef = useRef(null);
     const fileInputRef = useRef(null);
     const allowedSizes = [96, 288];
+
+    const styles = getStyles(isDarkMode);
 
     const extractColors = (img) => {
         const canvas = canvasRef.current;
@@ -185,6 +189,26 @@ export default function Home() {
 
     return (
         <div style={styles.container}>
+            <div style={image ? styles.headerRow : styles.headerPre}>
+                <h1 style={styles.title}>By the Books Color Checker 📚</h1>
+                <div style={styles.headerControls}>
+                    <button
+                        onClick={() => setIsDarkMode(!isDarkMode)}
+                        style={styles.darkModeToggle}
+                    >
+                        {isDarkMode ? <FaSun /> : <FaMoon />}
+                    </button>
+                    {image ? (
+                        <button
+                            type="button"
+                            onClick={() => setIsImportOpen(true)}
+                            style={styles.uploadButton}
+                        >
+                            Import Image
+                        </button>
+                    ) : null}
+                </div>
+            </div>
             <FileSelector
                 image={image}
                 isImportOpen={isImportOpen}
@@ -195,6 +219,7 @@ export default function Home() {
                 fileInputRef={fileInputRef}
                 handleFileChange={handleFileChange}
                 handleDropZoneKeyDown={handleDropZoneKeyDown}
+                isDarkMode={isDarkMode}
             />
             {image ? (
                 <div style={styles.contentWrapper}>
@@ -208,12 +233,14 @@ export default function Home() {
                         setShowApproximation={setShowApproximation}
                         highlightColor={highlightColor}
                         setHighlightColor={setHighlightColor}
+                        isDarkMode={isDarkMode}
                     />
                     <ColorViewer
                         colors={colors}
                         hoveredColor={hoveredColor}
                         setHoveredColor={setHoveredColor}
                         headPalette={headPalette}
+                        isDarkMode={isDarkMode}
                     />
                 </div>
             ) : null}

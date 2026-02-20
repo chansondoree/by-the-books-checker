@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "./styles";
+import { getStyles } from "./styles";
 
 export default function FileSelector({
     image,
@@ -10,8 +10,10 @@ export default function FileSelector({
     handleBrowseClick,
     fileInputRef,
     handleFileChange,
-    handleDropZoneKeyDown
+    handleDropZoneKeyDown,
+    isDarkMode = false
 }) {
+    const styles = getStyles(isDarkMode);
     const handleClose = () => setIsImportOpen(false);
     const handleOpen = () => setIsImportOpen(true);
 
@@ -51,20 +53,7 @@ export default function FileSelector({
     );
 
     return (
-        <div style={image ? styles.headerPost : styles.headerPre}>
-            <h1 style={{fontWeight: 'bold'}}>By the Books Color Checker 📚</h1>
-            {image ? (
-                <div className="upload-controls" style={styles.uploadControls}>
-                    <button
-                        type="button"
-                        onClick={handleOpen}
-                        style={styles.uploadButton}
-                    >
-                        Import Image
-                    </button>
-                </div>
-            ) : null}
-
+        <div>
             {!image ? dropZone : null}
 
             {image && isImportOpen ? (

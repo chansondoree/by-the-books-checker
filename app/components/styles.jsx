@@ -1,13 +1,84 @@
-const styles = {
+// Color theme variables
+const colorThemes = {
+  light: {
+    // Backgrounds
+    background: '#fff',
+    backgroundAlt: '#f9f9f9',
+    
+    // Text colors
+    textPrimary: '#333',
+    textSecondary: '#444',
+    textMuted: '#666',
+    textLight: '#999',
+    
+    // Borders
+    border: '#ccc',
+    borderLight: '#ddd',
+    borderLighter: '#e0e0e0',
+    
+    // Badge colors - active
+    badgeActiveBg: '#e8f3fc',
+    badgeActiveBorder: '#bfdbe8',
+    badgeActiveText: '#075b88',
+    
+    // Badge colors - inactive
+    badgeInactiveBg: '#fdf2ed',
+    badgeInactiveBorder: '#f3d3c3',
+    badgeInactiveText: '#8b4c2d',
+    
+    // Special
+    overlay: 'rgba(0, 0, 0, 0.45)',
+    shadow: 'rgba(0, 0, 0, 0.2)',
+  },
+  dark: {
+    // Backgrounds
+    background: '#1e1e1e',
+    backgroundAlt: '#2d2d2d',
+    
+    // Text colors
+    textPrimary: '#e0e0e0',
+    textSecondary: '#d0d0d0',
+    textMuted: '#999',
+    textLight: '#666',
+    
+    // Borders
+    border: '#444',
+    borderLight: '#555',
+    borderLighter: '#3a3a3a',
+    
+    // Badge colors - active
+    badgeActiveBg: '#1a3a52',
+    badgeActiveBorder: '#4a7a8a',
+    badgeActiveText: '#4a9cd1',
+    
+    // Badge colors - inactive
+    badgeInactiveBg: '#3a2a1a',
+    badgeInactiveBorder: '#6a4a3a',
+    badgeInactiveText: '#d4a574',
+    
+    // Special
+    overlay: 'rgba(0, 0, 0, 0.7)',
+    shadow: 'rgba(0, 0, 0, 0.5)',
+  }
+};
+
+const getStyles = (isDarkMode = false) => {
+  const theme = isDarkMode ? colorThemes.dark : colorThemes.light;
+  
+  return {
   container: {
     fontFamily: 'Arial, sans-serif',
     padding: '20px',
     maxWidth: '1200px',
-    margin: '0 auto'
+    margin: '0 auto',
+    backgroundColor: theme.background,
+    color: theme.textPrimary,
+    transition: 'background-color 0.3s, color 0.3s'
   },
   
   title: {
-    marginBottom: '20px'
+    margin: 0,
+    color: theme.textPrimary
   },
 
   headerPre: {
@@ -15,6 +86,22 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     gap: '1em',
+    marginBottom: '1em',
+  },
+
+  headerRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '1em',
+  },
+
+  headerControls: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '1em',
+    alignItems: 'center',
   },
 
   headerPost: {
@@ -27,17 +114,18 @@ const styles = {
     width: '100%',
     textAlign: 'center',
     fontSize: '12px',
-    color: '#666',
+    color: theme.textMuted,
     marginTop: '1em',
   },
 
   dropZone: {
-    border: '3px dashed #ccc',
+    border: `3px dashed ${theme.border}`,
     borderRadius: '10px',
     padding: '60px',
     textAlign: 'center',
-    backgroundColor: '#f9f9f9',
-    cursor: 'pointer'
+    backgroundColor: theme.backgroundAlt,
+    cursor: 'pointer',
+    transition: 'border-color 0.3s, background-color 0.3s'
   },
 
   fileInput: {
@@ -46,7 +134,7 @@ const styles = {
   
   dropZoneText: {
     fontSize: '18px',
-    color: '#666'
+    color: theme.textMuted
   },
 
   uploadControls: {
@@ -54,18 +142,20 @@ const styles = {
   },
 
   uploadButton: {
-    border: '1px solid #ccc',
+    border: `1px solid ${theme.border}`,
     borderRadius: '8px',
     padding: '10px 16px',
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     cursor: 'pointer',
-    fontSize: '14px'
+    fontSize: '14px',
+    color: theme.textPrimary,
+    transition: 'border-color 0.3s, background-color 0.3s'
   },
 
   modalOverlay: {
     position: 'fixed',
     inset: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backgroundColor: theme.overlay,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -76,10 +166,12 @@ const styles = {
   modalContent: {
     width: '100%',
     maxWidth: '520px',
-    backgroundColor: '#fff',
+    backgroundColor: theme.background,
     borderRadius: '12px',
     padding: '20px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
+    boxShadow: `0 20px 40px ${theme.shadow}`,
+    color: theme.textPrimary,
+    transition: 'background-color 0.3s, color 0.3s'
   },
 
   modalHeader: {
@@ -91,7 +183,8 @@ const styles = {
 
   modalTitle: {
     fontSize: '16px',
-    fontWeight: '600'
+    fontWeight: '600',
+    color: theme.textPrimary
   },
 
   modalClose: {
@@ -99,6 +192,7 @@ const styles = {
     background: 'transparent',
     fontSize: '20px',
     cursor: 'pointer',
+    color: theme.textPrimary,
     lineHeight: 1,
     padding: '2px 6px'
   },
@@ -115,12 +209,13 @@ const styles = {
   },
   
   sectionTitle: {
-    marginBottom: '10px'
+    marginBottom: '10px',
+    color: theme.textPrimary
   },
   
   canvas: {
     maxWidth: '100%',
-    border: '1px solid #ddd',
+    border: `1px solid ${theme.borderLight}`,
     borderRadius: '5px'
   },
   
@@ -143,16 +238,18 @@ const styles = {
     alignItems: 'center',
     gap: '8px',
     padding: '6px 8px',
-    border: '1px solid #ddd',
+    border: `1px solid ${theme.borderLight}`,
     borderRadius: '5px',
     cursor: 'pointer',
-    transition: 'background-color 0.2s'
+    transition: 'background-color 0.2s',
+    backgroundColor: theme.backgroundAlt,
+    color: theme.textPrimary
   },
   
   colorSwatch: {
     width: '28px',
     height: '28px',
-    border: '1px solid #ccc',
+    border: `1px solid ${theme.border}`,
     borderRadius: '4px',
     flexShrink: 0
   },
@@ -163,30 +260,31 @@ const styles = {
   
   colorHex: {
     fontWeight: 'bold',
-    fontSize: '12px'
+    fontSize: '12px',
+    color: theme.textPrimary
   },
 
   colorMeta: {
     fontSize: '11px',
-    color: '#666'
+    color: theme.textMuted
   },
   
   colorRgb: {
     fontSize: '11px',
-    color: '#666'
+    color: theme.textMuted
   },
   
   colorCount: {
     fontSize: '10px',
-    color: '#999'
+    color: theme.textLight
   },
 
   paletteBadgeActive: {
     fontSize: '10px',
     fontWeight: '600',
-    color: '#075b88',
-    backgroundColor: '#e8f3fc',
-    border: '1px solid #bfdbe8',
+    color: theme.badgeActiveText,
+    backgroundColor: theme.badgeActiveBg,
+    border: `1px solid ${theme.badgeActiveBorder}`,
     borderRadius: '999px',
     padding: '2px 6px',
     textTransform: 'uppercase',
@@ -196,9 +294,9 @@ const styles = {
   paletteBadgeInactive: {
     fontSize: '10px',
     fontWeight: '600',
-    color: '#8b4c2d',
-    backgroundColor: '#fdf2ed',
-    border: '1px solid #f3d3c3',
+    color: theme.badgeInactiveText,
+    backgroundColor: theme.badgeInactiveBg,
+    border: `1px solid ${theme.badgeInactiveBorder}`,
     borderRadius: '999px',
     padding: '2px 6px',
     textTransform: 'uppercase',
@@ -208,16 +306,17 @@ const styles = {
   headBodyLabel: {
     marginBottom: '8px',
     fontSize: '12px',
-    color: '#444'
+    color: theme.textSecondary
   },
 
   marginControl: {
     marginTop: '16px',
     padding: '12px',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: theme.backgroundAlt,
     borderRadius: '6px',
-    border: '1px solid #e0e0e0',
-    width: '288px'
+    border: `1px solid ${theme.borderLighter}`,
+    width: '288px',
+    transition: 'background-color 0.3s, border-color 0.3s'
   },
 
   marginLabel: {
@@ -225,22 +324,41 @@ const styles = {
     fontSize: '13px',
     fontWeight: '600',
     marginBottom: '6px',
-    color: '#333'
+    color: theme.textPrimary
   },
 
   marginInput: {
     width: '70px',
     padding: '6px 8px',
     fontSize: '14px',
-    border: '1px solid #ccc',
+    border: `1px solid ${theme.border}`,
     borderRadius: '4px',
-    marginRight: '8px'
+    marginRight: '8px',
+    backgroundColor: theme.background,
+    color: theme.textPrimary,
+    transition: 'border-color 0.3s, background-color 0.3s'
   },
 
   marginHint: {
     fontSize: '11px',
-    color: '#666'
+    color: theme.textMuted
+  },
+
+  darkModeToggle: {
+    width: '32pt',
+    height: '32pt',
+    border: `1px solid ${theme.border}`,
+    borderRadius: '8px',
+    padding: '8px 12px',
+    backgroundColor: theme.backgroundAlt,
+    color: theme.textPrimary,
+    cursor: 'pointer',
+    fontSize: '16px',
+    fontWeight: '500',
+    transition: 'border-color 0.3s, background-color 0.3s'
   }
+  };
 };
 
-export default styles;
+export { colorThemes, getStyles };
+export default getStyles;

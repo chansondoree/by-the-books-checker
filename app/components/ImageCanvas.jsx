@@ -1,6 +1,8 @@
-import styles from './styles';
+import { getStyles } from './styles';
 
-export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, colorMargin, setColorMargin, showApproximation, setShowApproximation, highlightColor, setHighlightColor }) {
+export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, colorMargin, setColorMargin, showApproximation, setShowApproximation, highlightColor, setHighlightColor, isDarkMode = false }) {
+    const styles = getStyles(isDarkMode);
+    
     return (
     <div className="image-section" style={styles.imageSection}>
         <h2 style={styles.sectionTitle}>
@@ -29,7 +31,7 @@ export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, 
                 />
                 <span style={styles.marginHint}>(0-50, per RGB channel)</span>
             </div>
-            <label htmlFor="approximation" style={{...styles.marginLabel, marginBottom: '0', fontWeight: 'bold', display: 'flex', alignItems: 'center'}}>
+            <label htmlFor="approximation" style={{...styles.marginLabel, marginBottom: '0', fontWeight: 'bold', display: 'flex', alignItems: 'center', color: styles.textPrimary}}>
                 <input
                     id="approximation"
                     type="checkbox"
@@ -48,7 +50,7 @@ export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, 
                     type="color"
                     value={highlightColor}
                     onChange={(e) => setHighlightColor(e.target.value)}
-                    style={{width: '28px', height: '28px', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer'}}
+                    style={{width: '28px', height: '28px', border: `1px solid ${styles.border}`, borderRadius: '4px', cursor: 'pointer'}}
                 />
             </div>
         </div>

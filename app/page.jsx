@@ -29,12 +29,56 @@ export default function Home() {
     const [colorMargin, setColorMargin] = useState(5);
     const [showApproximation, setShowApproximation] = useState(false);
     const [highlightColor, setHighlightColor] = useState('#FFFF00');
+    const [customPaletteImage, setCustomPaletteImage] = useState(null);
+    const [customPalette, setCustomPalette] = useState([]);
+    const [useCustomPalette, setUseCustomPalette] = useState(false);
     const canvasRef = useRef(null);
     const displayCanvasRef = useRef(null);
+    const paletteCanvasRef = useRef(null);
     const fileInputRef = useRef(null);
+    const paletteInputRef = useRef(null);
     const allowedSizes = [96, 288];
 
     const styles = getStyles(isDarkMode);
+
+    const extractPaletteFromImage = (img) => {
+        const canvas = paletteCanvasRef.current;
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        const colorMap = new Map();
+
+        // Extract all unique colors from the palette image
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+            const a = pixels[i + 3];
+
+            // Skip fully transparent pixels
+            if (a < 128) continue;
+
+            const key = `${r},${g},${b},${a}`;
+            colorMap.set(key, (colorMap.get(key) || 0) + 1);
+        }
+
+        // Convert to array of hex colors, sorted by frequency
+        const paletteColors = Array.from(colorMap.entries())
+            .sort((a, b) => b[1] - a[1])
+            .map(([color]) => {
+                const [r, g, b] = color.split(',').map(Number);
+                return rgbToHexNoAlpha(r, g, b);
+            });
+
+        setCustomPalette(paletteColors);
+        setUseCustomPalette(true);
+        return paletteColors;
+    };
 
     const extractColors = (img) => {
         const canvas = canvasRef.current;
@@ -45,9 +89,42 @@ export default function Home() {
         ctx.drawImage(img, 0, 0);
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const sortedColors = getColors(imageData, headPalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette, colorMargin);
+        const activePalette = useCustomPalette && customPalette.length > 0 ? customPalette : headPalette;
+        const sortedColors = getColors(imageData, activePalette, rgbToHexNoAlpha, rgbToHex, isColorInPalette, colorMargin);
 
         setColors(sortedColors);
+    };
+
+    const loadPaletteFile = (file) => {
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                setCustomPaletteImage(img);
+                extractPaletteFromImage(img);
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handlePaletteFileChange = (e) => {
+        loadPaletteFile(e.target.files[0]);
+        e.target.value = '';
+    };
+
+    const handlePaletteBrowseClick = () => {
+        if (paletteInputRef.current) {
+            paletteInputRef.current.click();
+        }
+    };
+
+    const clearCustomPalette = () => {
+        setCustomPaletteImage(null);
+        setCustomPalette([]);
+        setUseCustomPalette(false);
     };
 
     const loadImageFile = (file) => {
@@ -109,7 +186,7 @@ export default function Home() {
         if (image && canvasRef.current) {
             extractColors(image);
         }
-    }, [image, headPalette, colorMargin]);
+    }, [image, headPalette, colorMargin, customPalette, useCustomPalette]);
 
     useEffect(() => {
         if (!image || !displayCanvasRef.current) return;
@@ -124,7 +201,8 @@ export default function Home() {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
         // Apply palette approximation if toggled
-        if (showApproximation && headPalette.length > 0) {
+        const activePalette = useCustomPalette && customPalette.length > 0 ? customPalette : headPalette;
+        if (showApproximation && activePalette.length > 0) {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const pixels = imageData.data;
 
@@ -134,7 +212,7 @@ export default function Home() {
                 const b = pixels[i + 2];
                 // a = pixels[i + 3] (alpha unchanged)
 
-                const closest = findClosestPaletteColor({ r, g, b }, headPalette);
+                const closest = findClosestPaletteColor({ r, g, b }, activePalette);
                 if (closest) {
                     pixels[i] = closest.r;
                     pixels[i + 1] = closest.g;
@@ -172,7 +250,7 @@ export default function Home() {
             }
             ctx.putImageData(highlightData, 0, 0);
         }
-    }, [hoveredColor, image, showApproximation, headPalette, highlightColor]);
+    }, [hoveredColor, image, showApproximation, headPalette, customPalette, useCustomPalette, highlightColor]);
 
     useEffect(() => {
         if (image && displayCanvasRef.current) {
@@ -234,19 +312,27 @@ export default function Home() {
                         highlightColor={highlightColor}
                         setHighlightColor={setHighlightColor}
                         isDarkMode={isDarkMode}
+                        customPalette={customPalette}
+                        useCustomPalette={useCustomPalette}
+                        setUseCustomPalette={setUseCustomPalette}
+                        handlePaletteBrowseClick={handlePaletteBrowseClick}
+                        paletteInputRef={paletteInputRef}
+                        handlePaletteFileChange={handlePaletteFileChange}
+                        headPalette={headPalette}
                     />
                     <ColorViewer
                         colors={colors}
                         hoveredColor={hoveredColor}
                         setHoveredColor={setHoveredColor}
-                        headPalette={headPalette}
+                        headPalette={useCustomPalette && customPalette.length > 0 ? customPalette : headPalette}
                         isDarkMode={isDarkMode}
                     />
                 </div>
             ) : null}
             <div style={styles.footer}>
-                <i>Palettes taken from <a href="https://pokemondb.net" target="_blank">pokemondb.net</a> and the Smogon Sprite Project.</i>
+                <i>Default palettes taken from <a href="https://pokemondb.net" target="_blank">pokemondb.net</a> and the Smogon Sprite Project.</i>
             </div>
+            <canvas ref={paletteCanvasRef} style={{ display: 'none' }} />
         </div>
     );
 }

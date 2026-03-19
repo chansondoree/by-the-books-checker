@@ -1,6 +1,6 @@
 import { getStyles } from './styles';
 
-export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, colorMargin, setColorMargin, showApproximation, setShowApproximation, highlightColor, setHighlightColor, isDarkMode = false }) {
+export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, colorMargin, setColorMargin, showApproximation, setShowApproximation, highlightColor, setHighlightColor, isDarkMode = false, customPalette, useCustomPalette, setUseCustomPalette, handlePaletteBrowseClick, paletteInputRef, handlePaletteFileChange, headPalette }) {
     const styles = getStyles(isDarkMode);
     
     return (
@@ -17,6 +17,59 @@ export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, 
         <canvas ref={canvasRef} style={styles.hiddenCanvas} />
         <div className="controls-menu" style={styles.marginControl}>
             <div style={{marginBottom: '12px'}}>
+                <p style={{...styles.marginLabel, marginBottom: '8px'}}>
+                    {useCustomPalette && customPalette.length > 0 
+                        ? `Using custom palette (${customPalette.length} colors)` 
+                        : `Using default palette (${headPalette.length} colors)`}
+                </p>
+                {useCustomPalette && customPalette.length > 0 ? (
+                    <>
+                        <button
+                            onClick={() => setUseCustomPalette(false)}
+                            style={{padding: '8px 12px', border: '2px solid #ef4444', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#fee2e2', color: '#991b1b', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                        >
+                            Switch to Default Palette
+                        </button>
+                        <button
+                            onClick={handlePaletteBrowseClick}
+                            style={{padding: '8px 12px', border: '2px solid #f59e0b', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#fef3c7', color: '#92400e', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                        >
+                            Load Different Custom Palette
+                        </button>
+                    </>
+                ) : customPalette.length > 0 ? (
+                    <>
+                        <button
+                            onClick={() => setUseCustomPalette(true)}
+                            style={{padding: '8px 12px', border: '2px solid #3b82f6', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#dbeafe', color: '#1e40af', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                        >
+                            Switch to Custom Palette
+                        </button>
+                        <button
+                            onClick={handlePaletteBrowseClick}
+                            style={{padding: '8px 12px', border: '2px solid #f59e0b', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#fef3c7', color: '#92400e', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                        >
+                            Load Different Custom Palette
+                        </button>
+                    </>
+                ) : (
+                    <button
+                        onClick={handlePaletteBrowseClick}
+                        style={{padding: '8px 12px', border: '2px solid #3b82f6', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#dbeafe', color: '#1e40af', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                    >
+                        Load Custom Palette
+                    </button>
+                )}
+                <input
+                    ref={paletteInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePaletteFileChange}
+                    style={{ display: 'none' }}
+                />
+                <span style={styles.marginHint}>(Upload an image to extract colors)</span>
+            </div>
+            <div style={{marginBottom: '12px', borderTop: `1px solid ${styles.border}`, paddingTop: '12px'}}>
                 <label htmlFor="colorMargin" style={styles.marginLabel}>
                     Color Match Tolerance:
                 </label>

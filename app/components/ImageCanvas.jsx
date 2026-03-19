@@ -26,13 +26,13 @@ export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, 
                     <>
                         <button
                             onClick={() => setUseCustomPalette(false)}
-                            style={{padding: '8px 12px', border: '2px solid #ef4444', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#fee2e2', color: '#991b1b', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                            style={{...styles.paletteButtonBase, ...styles.paletteButtonRed}}
                         >
                             Switch to Default Palette
                         </button>
                         <button
                             onClick={handlePaletteBrowseClick}
-                            style={{padding: '8px 12px', border: '2px solid #f59e0b', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#fef3c7', color: '#92400e', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                            style={{...styles.paletteButtonBase, ...styles.paletteButtonAmber}}
                         >
                             Load Different Custom Palette
                         </button>
@@ -41,13 +41,13 @@ export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, 
                     <>
                         <button
                             onClick={() => setUseCustomPalette(true)}
-                            style={{padding: '8px 12px', border: '2px solid #3b82f6', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#dbeafe', color: '#1e40af', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                            style={{...styles.paletteButtonBase, ...styles.paletteButtonBlue}}
                         >
                             Switch to Custom Palette
                         </button>
                         <button
                             onClick={handlePaletteBrowseClick}
-                            style={{padding: '8px 12px', border: '2px solid #f59e0b', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#fef3c7', color: '#92400e', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                            style={{...styles.paletteButtonBase, ...styles.paletteButtonAmber}}
                         >
                             Load Different Custom Palette
                         </button>
@@ -55,7 +55,7 @@ export default function ImageCanvas({ displayCanvasRef, canvasRef, fusionOrder, 
                 ) : (
                     <button
                         onClick={handlePaletteBrowseClick}
-                        style={{padding: '8px 12px', border: '2px solid #3b82f6', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#dbeafe', color: '#1e40af', marginBottom: '8px', width: '100%', fontWeight: '500'}}
+                        style={{...styles.paletteButtonBase, ...styles.paletteButtonBlue}}
                     >
                         Load Custom Palette
                     </button>

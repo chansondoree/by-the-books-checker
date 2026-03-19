@@ -345,13 +345,40 @@ const getStyles = (isDarkMode = false) => {
     color: theme.textMuted
   },
 
+  paletteButtonBase: {
+    padding: '8px 12px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginBottom: '8px',
+    width: '100%',
+    fontWeight: '500',
+  },
+
+  paletteButtonBlue: {
+    border: '2px solid #3b82f6',
+    backgroundColor: isDarkMode ? '#1e3a5f' : '#dbeafe',
+    color: isDarkMode ? '#93c5fd' : '#1e40af',
+  },
+
+  paletteButtonRed: {
+    border: '2px solid #ef4444',
+    backgroundColor: isDarkMode ? '#3f1515' : '#fee2e2',
+    color: isDarkMode ? '#fca5a5' : '#991b1b',
+  },
+
+  paletteButtonAmber: {
+    border: '2px solid #f59e0b',
+    backgroundColor: isDarkMode ? '#3f2a0a' : '#fef3c7',
+    color: isDarkMode ? '#fcd34d' : '#92400e',
+  },
+
   darkModeToggle: {
     width: '32pt',
     height: '32pt',
     border: `1px solid ${theme.border}`,
     borderRadius: '8px',
     padding: '8px 12px',
-    backgroundColor: theme.backgroundAlt,
+    backgroundColor: theme.background,
     color: theme.textPrimary,
     cursor: 'pointer',
     fontSize: '16px',

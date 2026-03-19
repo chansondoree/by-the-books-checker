@@ -15,6 +15,8 @@ import { getStyles } from './components/styles';
 
 export default function Home() {
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [hoverDarkToggle, setHoverDarkToggle] = useState(false);
+    const [hoverImportBtn, setHoverImportBtn] = useState(false);
     const [image, setImage] = useState(null);
     const [colors, setColors] = useState([]);
     const [hoveredColor, setHoveredColor] = useState(null);
@@ -32,6 +34,7 @@ export default function Home() {
     const [customPaletteImage, setCustomPaletteImage] = useState(null);
     const [customPalette, setCustomPalette] = useState([]);
     const [useCustomPalette, setUseCustomPalette] = useState(false);
+    const [colorRemapping, setColorRemapping] = useState({});
     const canvasRef = useRef(null);
     const displayCanvasRef = useRef(null);
     const paletteCanvasRef = useRef(null);
@@ -137,6 +140,7 @@ export default function Home() {
         const bodyName = pifDex[body] || body;
         setHeadPalette(colorsByDex[head] || []);
         setFusionOrder({ head, body, headName, bodyName });
+        setColorRemapping({});
 
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -212,11 +216,17 @@ export default function Home() {
                 const b = pixels[i + 2];
                 // a = pixels[i + 3] (alpha unchanged)
 
-                const closest = findClosestPaletteColor({ r, g, b }, activePalette);
-                if (closest) {
-                    pixels[i] = closest.r;
-                    pixels[i + 1] = closest.g;
-                    pixels[i + 2] = closest.b;
+                const hexKey = rgbToHexNoAlpha(r, g, b);
+                let target;
+                if (colorRemapping[hexKey]) {
+                    target = hexToRgbExport(colorRemapping[hexKey]);
+                } else {
+                    target = findClosestPaletteColor({ r, g, b }, activePalette);
+                }
+                if (target) {
+                    pixels[i] = target.r;
+                    pixels[i + 1] = target.g;
+                    pixels[i + 2] = target.b;
                 }
             }
             ctx.putImageData(imageData, 0, 0);
@@ -250,7 +260,7 @@ export default function Home() {
             }
             ctx.putImageData(highlightData, 0, 0);
         }
-    }, [hoveredColor, image, showApproximation, headPalette, customPalette, useCustomPalette, highlightColor]);
+    }, [hoveredColor, image, showApproximation, headPalette, customPalette, useCustomPalette, highlightColor, colorRemapping]);
 
     useEffect(() => {
         if (image && displayCanvasRef.current) {
@@ -268,11 +278,13 @@ export default function Home() {
     return (
         <div style={styles.container}>
             <div style={image ? styles.headerRow : styles.headerPre}>
-                <h1 style={styles.title}>By the Books Color Checker 📚</h1>
+                <h1 style={styles.title}>Palette Checker 🎨</h1>
                 <div style={styles.headerControls}>
                     <button
                         onClick={() => setIsDarkMode(!isDarkMode)}
-                        style={styles.darkModeToggle}
+                        onMouseEnter={() => setHoverDarkToggle(true)}
+                        onMouseLeave={() => setHoverDarkToggle(false)}
+                        style={{ ...styles.darkModeToggle, backgroundColor: hoverDarkToggle ? (isDarkMode ? '#3a3a3a' : '#f0f0f0') : styles.darkModeToggle.backgroundColor }}
                     >
                         {isDarkMode ? <FaSun /> : <FaMoon />}
                     </button>
@@ -280,7 +292,9 @@ export default function Home() {
                         <button
                             type="button"
                             onClick={() => setIsImportOpen(true)}
-                            style={styles.uploadButton}
+                            onMouseEnter={() => setHoverImportBtn(true)}
+                            onMouseLeave={() => setHoverImportBtn(false)}
+                            style={{ ...styles.uploadButton, backgroundColor: hoverImportBtn ? (isDarkMode ? '#3a3a3a' : '#f0f0f0') : styles.uploadButton.backgroundColor }}
                         >
                             Import Image
                         </button>
@@ -326,6 +340,8 @@ export default function Home() {
                         setHoveredColor={setHoveredColor}
                         headPalette={useCustomPalette && customPalette.length > 0 ? customPalette : headPalette}
                         isDarkMode={isDarkMode}
+                        colorRemapping={colorRemapping}
+                        setColorRemapping={setColorRemapping}
                     />
                 </div>
             ) : null}
